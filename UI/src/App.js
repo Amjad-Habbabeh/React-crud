@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 
 function App() {
@@ -30,7 +29,6 @@ function App() {
   };
 
   const handleUpdate = (movie) => {
-    console.log(movie, newReviews);
     fetch('http://localhost:3001/api/update', {
       method: 'PUT',
       headers: {
@@ -49,7 +47,6 @@ function App() {
     fetch('http://localhost:3001/api/get')
       .then((res) => res.json())
       .then((data) => setMovieReviewList(data));
-    console.log('refresh');
   }, [updateClicked]);
 
   return (
@@ -74,7 +71,7 @@ function App() {
         {movieReviewList.length > 0 &&
           movieReviewList.map((movie) => {
             return (
-              <div key={uuidv4()}>
+              <div key={movie.id}>
                 <h1>
                   Movie Name:{movie.moviesName} | Movie Review:
                   {movie.moviesReview}
@@ -84,8 +81,9 @@ function App() {
                 </button>
                 <input
                   type="text"
-                  value={newReviews}
-                  onChange={(e) => setNewReviews(e.target.value)}
+                  onChange={(e) => {
+                    setNewReviews(e.target.value);
+                  }}
                 />
                 <button onClick={() => handleUpdate(movie.moviesName)}>
                   update

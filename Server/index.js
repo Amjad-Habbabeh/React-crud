@@ -2,12 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql');
-const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '1985',
-  database: 'cruddatabase',
-});
+const fs = require('fs');
+const config = JSON.parse(fs.readFileSync('config_secret.json'));
+
+const connection = mysql.createConnection(config);
+const db = mysql.createPool(connection);
 
 const app = express();
 app.use(cors());
@@ -28,6 +27,7 @@ app.post('/api/insert', (req, res) => {
 app.get('/api/get', (req, res) => {
   const sqlSelect = 'SELECT * FROM movies_reviews';
   db.query(sqlSelect, (err, result) => {
+    console.log(result);
     res.send(result);
   });
 });
